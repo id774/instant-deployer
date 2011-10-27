@@ -1,0 +1,9 @@
+instant-deployer
+
+名前
+ instant-deployer - シンプルで汎用的なデプロイツール
+
+書式
+ bin/deploy.sh
+
+説明
