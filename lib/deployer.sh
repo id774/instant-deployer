@@ -1,7 +1,7 @@
 # lib/deployer.sh
 
 rsync_options() {
-    OPTS="--force --delete -av"
+    OPTS="--force --delete -e ssh -av"
     if [ -f $EXCLUDEFILE ]; then
         OPTS="$OPTS --exclude-from=$EXCLUDEFILE"
     fi
@@ -11,8 +11,8 @@ rsync_options() {
 }
 
 exec_rsync() {
-    echo "rsync $OPTS $SOURCE $REMOTE_DIR/"
-    rsync $OPTS $SOURCE $REMOTE_DIR/
+    echo "rsync $OPTS $SOURCE $REMOTE_USER@$REMOTE_HOST:$REMOTE_DIR/"
+    rsync $OPTS $SOURCE $REMOTE_USER@$REMOTE_HOST:$REMOTE_DIR/
     echo "Return code is $?"
 }
 
