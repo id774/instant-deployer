@@ -68,7 +68,7 @@ DB のマイグレーション等も指定することができる。
 
 定義が複数の場合は " " で囲みスペースを開けて羅列する。
 
-設定のなかにはパスワードそのものを記述することもある。
+設定の中にはパスワードそのものを記述することもある。
 したがって、この設定ファイルは管理担当ユーザーのみ
 アクセス可能となるようパーミッションを設定することが
 望ましい。
@@ -105,6 +105,10 @@ REMOTE_HOST
 REMOTE_DIR
 デプロイ先のディレクトリ名を指定する。
 
+REMOTE_PERMISSION
+デプロイ先のディレクトリのパーミッションを設定するコマンド。
+chown/chmod や SELinux のコマンド等をワンライナーで指定する。
+
 REMOTE_COMMAND
 デプロイ先のサービスを再起動するためのリモートコマンド
 (例) デプロイ後に CentOS の apache を再起動する例
@@ -122,6 +126,7 @@ JOBLOG
 ログは追記される。
 
 ADMIN_MAIL_ADDRESS
+(オプション)
 ここにシステム管理者のメールアドレスを指定した場合
 ログがメール送信される。
 バッチ処理等で自動デプロイする際に便利である。
@@ -192,6 +197,8 @@ ADMIN_MAIL_ADDRESS
 |     リポジトリからリソースを取得してローカルを最新化する。
 |   deployer.sh
 |     rsync を利用してリモートサーバーにファイルを転送する。
+|   permission.sh
+|     デプロイ後のディレクトリのパーミッションを設定する。
 |   reloader.sh
 |     リモートホストのプロセスを再起動する。
 |
@@ -269,6 +276,86 @@ DRY_RUN=true
 
  本ソフトウェアを改変したり機能追加する場合においても
 あらかじめユニットテストを作成し、それらが正常終了する
-状態を目指して開発していくことがのぞましい。
+状態を目指して開発していくことが望ましい。
+
+
+====
+ログ
+====
+
+ ログは設定ファイルの JOBLOG で指定したファイルに
+追記される。ユニットテストの場合でも DRY_RUN=true の
+場合でもログは出力される。
+
+ 以下はログファイルのサンプルである。
+
+
+*** bin/deploy.sh: Job start at skylle on 2011/10/27 17:20:08
+- module loader loaded
+- module updater loaded
+git pull
+From github.com:id774/instant-deployer
+   cbc3570..dc085eb  master     -> origin/master
+Updating cbc3570..dc085eb
+Fast-forward
+ README.md          |   24 ++++
+ bin/deploy.sh      |    2 +-
+ config/deploy.conf |   14 +-
+ doc/COPYING        |   55 +++++++++
+ doc/COPYING.ja     |   51 ++++++++
+ doc/GPL            |  340 ++++++++++++++++++++++++++++++++++++++++++++++++++++
+ doc/README.ja      |  274 ++++++++++++++++++++++++++++++++++++++++++
+ installer.sh       |   50 ++++++++
+ lib/deployer.sh    |    6 +-
+ lib/reloader.sh    |    1 +
+ lib/updater.sh     |    2 +
+ test/test.conf     |   47 +++++++
+ 12 files changed, 855 insertions(+), 11 deletions(-)
+ create mode 100644 doc/COPYING
+ create mode 100644 doc/COPYING.ja
+ create mode 100644 doc/GPL
+ create mode 100644 doc/README.ja
+ create mode 100755 installer.sh
+ create mode 100644 test/test.conf
+- module deployer loaded
+* Executing deploy with rsync on 2011/10/27 17:20:13
+rsync --force --delete -e ssh -av --exclude-from=/home/debian/instant-deployer/bin/../etc/deploy_exclude --dry-run /home/debian/source debian@harpuia:/tmp/
+sending incremental file list
+source/
+source/README.md
+source/installer.sh
+source/bin/
+source/bin/deploy.sh
+source/config/
+source/config/deploy.conf
+source/doc/
+source/doc/COPYING
+source/doc/COPYING.ja
+source/doc/GPL
+source/doc/README.ja
+source/etc/
+source/etc/deploy_exclude
+source/lib/
+source/lib/deployer.sh
+source/lib/loader.sh
+source/lib/reloader.sh
+source/lib/updater.sh
+source/test/
+source/test/test.conf
+
+sent 546 bytes  received 82 bytes  1256.00 bytes/sec
+total size is 38522  speedup is 61.34 (DRY RUN)
+Return code is 0
+- module permission loaded
+ssh -l debian harpuia chown -R www-data:www-data /tmp/sample_app
+- module reloader loaded
+ssh -l debian harpuia /etc/init.d/apache restart
+*** bin/deploy.sh: End of Job at skylle on 2011/10/27 17:20:13
+
+
+ この例では git リポジトリからソースコードを取得し
+リモートサーバーに対して rsync にてデプロイ、その後
+パーミッションを設定して apache を再起動している。
+(DRY_RUN=true)
 
 

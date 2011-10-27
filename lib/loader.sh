@@ -9,4 +9,4 @@ load_module() {
 }
 
 echo "- module loader loaded"
-load_module updater deployer reloader
+load_module updater deployer permission reloader
