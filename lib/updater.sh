@@ -2,7 +2,7 @@
 
 updater() {
     cd $SOURCE
-    echo "UPDATE_COMMAND"
+    echo "$UPDATE_COMMAND"
     $UPDATE_COMMAND
     cd ..
 }
