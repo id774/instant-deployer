@@ -18,7 +18,7 @@ send_mail_to_admin() {
 instant_deployer() {
     echo -n "*** $0: Job start at `/bin/hostname` on ">>$JOBLOG 2>&1
     date "+%Y/%m/%d %T">>$JOBLOG 2>&1
-    . $SCRIPT_HOME/lib/loader.sh>>$JOBLOG 2>&1
+    . $SCRIPT_HOME/lib/deployer.sh>>$JOBLOG 2>&1
     echo -n "*** $0: End of Job at `/bin/hostname` on ">>$JOBLOG 2>&1
     date "+%Y/%m/%d %T">>$JOBLOG 2>&1
     echo>>$JOBLOG 2>&1
