@@ -250,6 +250,41 @@ cron で自動実行したり Jenkins と連動させる等して
 デプロイを自動実行することができる。
 
 
+==================
+複数環境の使い分け
+==================
+
+たとえば branch を production 環境に、
+trunk を development 環境というように
+複数のデプロイ設定を使い分けることができる。
+
+この場合、まず準備として trunk と branch の
+2 つを別々にチェックアウトする。
+そして config ディレクトリの下に 2 つの
+ファイルを別々に作成する。
+
+# 準備作業
+cd ~/svnwork
+# trunk をチェックアウト
+svn co http://svnserver/svn/hoge/trunk trunk
+# branch をチェックアウト
+svn co http://svnserver/svn/hoge/branch/1.0 1.0
+
+あとは以下のように config を分ける。
+
+# config/development.conf
+SOURCE=$HOME/svnwork/trunk
+REMOTE_USER=deploy
+REMOTE_HOST=server-dev
+
+# config/production.conf
+SOURCE=$HOME/svnwork/1.0
+REMOTE_USER=deploy
+REMOTE_HOST=server-production
+
+deploy.sh の引数で config ファイルを指定できる。
+
+
 ======
 テスト
 ======
