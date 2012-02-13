@@ -20,5 +20,5 @@ Author
 Copyright and license
 ---------------------
 
-See the file doc/COPYING (.ja).
+See the file doc/LICENSE.
 
