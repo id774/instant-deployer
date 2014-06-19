@@ -325,7 +325,7 @@ DRY_RUN=true
  以下はログファイルのサンプルである。
 
 
-*** bin/deploy.sh: Job start at skylle on 2011/10/27 17:20:08
+*** bin/deploy.sh: Job started on skylle at 2011/10/27 17:20:08
 - module loader loaded
 - module updater loaded
 git pull
@@ -385,7 +385,7 @@ Return code is 0
 ssh -l debian harpuia chown -R www-data:www-data /tmp/sample_app
 - module reloader loaded
 ssh -l debian harpuia /etc/init.d/apache restart
-*** bin/deploy.sh: End of Job at skylle on 2011/10/27 17:20:13
+*** bin/deploy.sh: Job ended on skylle at 2011/10/27 17:20:13
 
 
  この例では git リポジトリからソースコードを取得し
