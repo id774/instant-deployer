@@ -1,6 +1,7 @@
 #!/bin/sh
 
 setup() {
+    LC_CTYPE=ja_JP.UTF-8
     test -n "$1" || CONFIG=config/deploy.conf
     test -n "$1" && CONFIG=$1
     test "$1" = "--test" && CONFIG=test/test.conf
@@ -10,7 +11,7 @@ setup() {
 }
 
 send_mail_to_admin() {
-    nkf -w $JOBLOG | \
+    cat -v $JOBLOG | nkf -w | \
       mail -s "[admin][`/bin/hostname`] Instant Deploy Log" \
       $ADMIN_MAIL_ADDRESS
 }
